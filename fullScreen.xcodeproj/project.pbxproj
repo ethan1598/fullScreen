@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1711D13F2C4C00B000E61083 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1711D13E2C4C00B000E61083 /* WebViewController.swift */; };
+		176C0F132C4D50DF000829DE /* UrlInfoRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176C0F122C4D50DF000829DE /* UrlInfoRealm.swift */; };
 		17D3368A2C4BE416006DB075 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D336892C4BE416006DB075 /* AppDelegate.swift */; };
 		17D3368C2C4BE416006DB075 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D3368B2C4BE416006DB075 /* SceneDelegate.swift */; };
 		17D3368E2C4BE416006DB075 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D3368D2C4BE416006DB075 /* ViewController.swift */; };
@@ -55,6 +56,7 @@
 
 /* Begin PBXFileReference section */
 		1711D13E2C4C00B000E61083 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		176C0F122C4D50DF000829DE /* UrlInfoRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlInfoRealm.swift; sourceTree = "<group>"; };
 		17D336862C4BE416006DB075 /* fullScreen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fullScreen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17D336892C4BE416006DB075 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17D3368B2C4BE416006DB075 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +99,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		176C0F0D2C4D4FFC000829DE /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				176C0F102C4D5037000829DE /* StoryBoards */,
+				17D336892C4BE416006DB075 /* AppDelegate.swift */,
+				17D3368B2C4BE416006DB075 /* SceneDelegate.swift */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		176C0F0E2C4D500A000829DE /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				176C0F0F2C4D5019000829DE /* Models */,
+				176C0F112C4D5058000829DE /* ViewController */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		176C0F0F2C4D5019000829DE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				176C0F122C4D50DF000829DE /* UrlInfoRealm.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		176C0F102C4D5037000829DE /* StoryBoards */ = {
+			isa = PBXGroup;
+			children = (
+				17D3368F2C4BE417006DB075 /* Main.storyboard */,
+				17D336942C4BE41B006DB075 /* LaunchScreen.storyboard */,
+			);
+			path = StoryBoards;
+			sourceTree = "<group>";
+		};
+		176C0F112C4D5058000829DE /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				17D3368D2C4BE416006DB075 /* ViewController.swift */,
+				1711D13E2C4C00B000E61083 /* WebViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		17D3367D2C4BE416006DB075 = {
 			isa = PBXGroup;
 			children = (
@@ -105,7 +152,6 @@
 				17D3369F2C4BE41B006DB075 /* fullScreenTests */,
 				17D336A92C4BE41B006DB075 /* fullScreenUITests */,
 				17D336872C4BE416006DB075 /* Products */,
-				17D336BA2C4BF642006DB075 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,14 +168,10 @@
 		17D336882C4BE416006DB075 /* fullScreen */ = {
 			isa = PBXGroup;
 			children = (
-				17D336892C4BE416006DB075 /* AppDelegate.swift */,
-				17D3368B2C4BE416006DB075 /* SceneDelegate.swift */,
-				17D3368D2C4BE416006DB075 /* ViewController.swift */,
-				17D3368F2C4BE417006DB075 /* Main.storyboard */,
 				17D336922C4BE41B006DB075 /* Assets.xcassets */,
-				17D336942C4BE41B006DB075 /* LaunchScreen.storyboard */,
 				17D336972C4BE41B006DB075 /* Info.plist */,
-				1711D13E2C4C00B000E61083 /* WebViewController.swift */,
+				176C0F0D2C4D4FFC000829DE /* Resource */,
+				176C0F0E2C4D500A000829DE /* Source */,
 			);
 			path = fullScreen;
 			sourceTree = "<group>";
@@ -149,13 +191,6 @@
 				17D336AC2C4BE41B006DB075 /* fullScreenUITestsLaunchTests.swift */,
 			);
 			path = fullScreenUITests;
-			sourceTree = "<group>";
-		};
-		17D336BA2C4BF642006DB075 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				176C0F132C4D50DF000829DE /* UrlInfoRealm.swift in Sources */,
 				17D3368E2C4BE416006DB075 /* ViewController.swift in Sources */,
 				17D3368A2C4BE416006DB075 /* AppDelegate.swift in Sources */,
 				17D3368C2C4BE416006DB075 /* SceneDelegate.swift in Sources */,

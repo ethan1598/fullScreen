@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
     let ad = UIApplication.shared.delegate as! AppDelegate
+    let realm = try! Realm()
     
     let domainList = ["site1", "site2"]
     let nvc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "webViewVC")
@@ -25,16 +27,71 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         //        self.configPickerView()
+        print("realm 개수 :", realm.objects(UrlInfoRealm.self).count)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.hidesBarsOnSwipe = false
+        
+//        print(realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site1'")[0].urlDomain ?? "")
+        
+        if realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site1'").count != 0 {
+            recentSite1Link.text = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site1'")[0].urlDomain
+        } else {
+            recentSite1Link.text = "없음"
+        }
+        
+        if realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'").count != 0 {
+            recentSite2Link.text = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'")[0].urlDomain
+        } else {
+            recentSite2Link.text = "없음"
+        }
     }
     
     @IBAction func goSite1(_ sender: Any) {
+        let newDataUrl = UrlInfoRealm()
+        let queryResult = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site1'")
+        
         ad.goURL = "https://example1.com/콘텐츠?fil=인기"
+
+        if queryResult.count == 0 {
+            do {
+                newDataUrl.urlSrl = "site1"
+                newDataUrl.urlDomain = ad.goURL
+                
+                try realm.write {
+                    realm.add(newDataUrl)
+                }
+            } catch {
+                print("Site1 Insert Error \(error)")
+            }
+        } else {
+            ad.goURL = queryResult[0].urlDomain ?? ""
+        }
         
         self.navigationController?.pushViewController(nvc, animated: true)
     }
     
     @IBAction func goSite2(_ sender: Any) {
+        let newDataUrl = UrlInfoRealm()
+        let queryResult = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'").count
+        
         ad.goURL = "https://example2.com/"
+        
+        if queryResult == 0 {
+            do {
+                newDataUrl.urlSrl = "site2"
+                newDataUrl.urlDomain = ad.goURL
+                
+                try realm.write {
+                    realm.add(newDataUrl)
+                }
+            } catch {
+                print("site2 Insert Error \(error)")
+            }
+        } else {
+            
+        }
         
         self.navigationController?.pushViewController(nvc, animated: true)
     }

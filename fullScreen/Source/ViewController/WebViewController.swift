@@ -36,12 +36,12 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
         
         webView.allowsBackForwardNavigationGestures = true
         
-        navigationController?.hidesBarsOnSwipe = true
-        
         self.webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        navigationController?.hidesBarsOnSwipe = true
+        
         self.navigationItem.title = "\(ad.goURL)"
         
         let url = URL(string: ad.goURL)

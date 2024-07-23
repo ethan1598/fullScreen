@@ -111,14 +111,14 @@ extension WebViewController: WKUIDelegate, WKNavigationDelegate {
                 
                 webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'", completionHandler: nil)
                 
-                //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
-                //                                           completionHandler: nil)
-                //
-                //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
-                //                                           completionHandler: nil)
-                //
-                //                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
-                //                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
+                                           completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
+                                           completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
+                                           completionHandler: nil)
             } else {
                 webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
                 

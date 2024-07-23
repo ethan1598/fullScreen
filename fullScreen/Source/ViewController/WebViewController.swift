@@ -22,14 +22,6 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
             webView.isInspectable = true
         }
         
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: {
-            (records) -> Void in
-            for record in records {
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-                // remove callback
-            }
-        })
-        
         webView.scrollView.delegate = self
         webView.navigationDelegate  = self
         webView.uiDelegate = self
@@ -40,6 +32,14 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: {
+            (records) -> Void in
+            for record in records {
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                // remove callback
+            }
+        })
+        
         navigationController?.hidesBarsOnSwipe = true
         
         self.navigationItem.title = "\(ad.goURL)"
@@ -50,45 +50,49 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
         webView.load(req)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        webView?.loadHTMLString("<html><body></body></html>", baseURL: nil)
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return navigationController?.isNavigationBarHidden ?? false
     }
 }
 
 extension WebViewController: WKUIDelegate, WKNavigationDelegate {
-//    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-//        print("didStartProvisionalNavigation")
-//        
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) { [self] in
-//            let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
-//            
-//            if checkAdUrl.contains("site1") {
-//                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
-//                                           completionHandler: nil)
-//                
-//                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
-//                                           completionHandler: nil)
-//            }
-//        }
-//    }
+    //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    //        print("didStartProvisionalNavigation")
+    //
+    //        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) { [self] in
+    //            let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
+    //
+    //            if checkAdUrl.contains("site1") {
+    //                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
+    //                                           completionHandler: nil)
+    //
+    //                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
+    //                                           completionHandler: nil)
+    //            }
+    //        }
+    //    }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         print("didCommit")
@@ -97,29 +101,45 @@ extension WebViewController: WKUIDelegate, WKNavigationDelegate {
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             
             if checkAdUrl.contains("site1") {
-                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
-                                           completionHandler: nil)
+                //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",
+                //                                           completionHandler: nil)
+                //
+                //                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
+                //                                           completionHandler: nil)
+                //
+                //                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
+                //                                           completionHandler: nil)
+            } else {
+                webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('#id_mbv')[0].style.display = 'none'", completionHandler: nil)
                 
-                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",
-                                           completionHandler: nil)
+                webView.evaluateJavaScript("document.querySelectorAll('#hwjsutnkgpqrlvfmio')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('#tuvqmrlgjopsfwxnikh')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('#ptymjglvrfxsqhikwuno')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('#hd_pop')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
+                
+                webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
+                
             }
         }
     }
@@ -153,7 +173,7 @@ extension WebViewController {
                 return
             }
             
-            print("now url = \(url)")
+            print("now url = \(url)", url.count)
             self.navigationItem.title = "\(url)"
             
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
@@ -194,6 +214,41 @@ extension WebViewController {
                 }
                 
                 // navigationController 기본 뒤로가기 컨트롤러
+                self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            } else if url.contains("site2") && url.count <= 23 {
+                if checkAdUrl != changeUrl {
+                    let alert = UIAlertController(title: "Detect Change URL", message: "요청된 url = \(checkAdUrl)\n변경된 url = \(changeUrl)\n변경된 url로 저장하시겠습니까?", preferredStyle: .alert)
+                    
+                    let success = UIAlertAction(title: "확인", style: .default){ [self] action in
+                        print("확인 버튼이 눌렸습니다.")
+                        
+                        let existingData = self.realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'")
+                        print("취소할 데이터 :", existingData)
+                        
+                        let newData = UrlInfoRealm()
+                        newData.urlSrl = "site2"
+                        newData.urlDomain = url
+                        
+                        do {
+                            try realm.write {
+                                realm.delete(existingData)
+                                realm.add(newData)
+                            }
+                        } catch {
+                            print("\(error)")
+                        }
+                    }
+                    
+                    let cancel = UIAlertAction(title: "취소", style: .cancel){ cancel in
+                        print("취소 버튼이 눌렸습니다.")
+                    }
+                    
+                    alert.addAction(cancel)
+                    alert.addAction(success)
+                    
+                    present(alert, animated: true)
+                }
+                
                 self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             } else {
                 self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false

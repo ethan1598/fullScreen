@@ -74,11 +74,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func goSite2(_ sender: Any) {
         let newDataUrl = UrlInfoRealm()
-        let queryResult = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'").count
+        let queryResult = realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'")
         
         ad.goURL = "https://example2.com/"
         
-        if queryResult == 0 {
+        if queryResult.count == 0 {
             do {
                 newDataUrl.urlSrl = "site2"
                 newDataUrl.urlDomain = ad.goURL
@@ -90,8 +90,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 print("site2 Insert Error \(error)")
             }
         } else {
-            
+            ad.goURL = queryResult[0].urlDomain ?? ""
         }
+        
+        print(ad.goURL.count)
         
         self.navigationController?.pushViewController(nvc, animated: true)
     }

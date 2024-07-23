@@ -22,12 +22,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
     //    let picker = UIPickerView()
     @IBOutlet weak var goSite1: UIButton!
     @IBOutlet weak var goSite2: UIButton!
+    @IBOutlet weak var site1Title: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //        self.configPickerView()
         print("realm 개수 :", realm.objects(UrlInfoRealm.self).count)
+        
+        site1Title.delegate = self
+        
+        let keyboardToolbar = UIToolbar()
+        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneBarButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.doneButtonTapped))
+        keyboardToolbar.items = [flexBarButton, doneBarButton]
+        keyboardToolbar.sizeToFit()
+//        keyboardToolbar.tintColor = UIColor.systemGray
+
+        site1Title.inputAccessoryView = keyboardToolbar
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +58,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             recentSite2Link.text = "없음"
         }
+        
+        site1Title.text = ""
     }
     
     @IBAction func goSite1(_ sender: Any) {
@@ -67,6 +81,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
             }
         } else {
             ad.goURL = queryResult[0].urlDomain ?? ""
+            
+            if site1Title.text != "" {
+                var site1Domain = ""
+                if let convertUrl = URL(string: ad.goURL) {
+                    if let domain = convertUrl.host {
+                        // domain 변수에는 "www.example.com"이 저장됩니다.
+                        site1Domain = domain
+                    }
+                }
+                
+                ad.goURL = "https://\(site1Domain)/\(site1Title.text!.replacingOccurrences(of: " ", with: "-"))"
+                print("convert Title, \(ad.goURL)")
+            }
         }
         
         self.navigationController?.pushViewController(nvc, animated: true)
@@ -98,6 +125,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.navigationController?.pushViewController(nvc, animated: true)
     }
     
+}
+
+extension ViewController {
+    @objc func doneButtonTapped() {
+        // 완료 버튼이 눌렸을 때 실행될 코드
+        site1Title.resignFirstResponder() // 키보드 내리기
+        print("Text entered: \(site1Title.text ?? "")")
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 //extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {

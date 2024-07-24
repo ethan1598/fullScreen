@@ -15,6 +15,8 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
     let ad = UIApplication.shared.delegate as! AppDelegate
     let realm = try! Realm()
     
+    var webV: WKWebView!
+    
     @IBOutlet weak var webView: WKWebView!
     
     override func viewDidLoad() {
@@ -48,6 +50,8 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
         let req = URLRequest(url: url!)
         
         webView.load(req)
+        
+        setupWebView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -151,6 +155,33 @@ extension WebViewController: WKUIDelegate, WKNavigationDelegate {
 }
 
 extension WebViewController {
+    
+    func setupWebView() {
+        let webConfiguration = WKWebViewConfiguration()
+        let webV = WKWebView(frame: .zero, configuration: webConfiguration)
+        
+        view.addSubview(webV)
+        
+        // URL 로드
+        let url = URL(string: "https://naver.com")!
+        let request = URLRequest(url: url)
+        webV.load(request)
+        
+        webV.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            webV.topAnchor.constraint(equalTo: view.topAnchor),
+            webV.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webV.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webV.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        print("SET UP WEBVIEW")
+        
+        webV.scrollView.delegate = self
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("End Scroll")
+    }
     
     func extractDomainUrl(urlString: String) -> String {
         if let url = URL(string: urlString) {

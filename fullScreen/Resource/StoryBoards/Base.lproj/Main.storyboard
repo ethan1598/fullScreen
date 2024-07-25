@@ -181,7 +181,7 @@
                             </wkWebView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Wil-4l-qVC"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Wil-4l-qVC" firstAttribute="trailing" secondItem="5ec-yi-WAV" secondAttribute="trailing" id="2rX-jB-5c5"/>
                             <constraint firstAttribute="bottom" secondItem="5ec-yi-WAV" secondAttribute="bottom" id="D0e-Ie-4wp"/>

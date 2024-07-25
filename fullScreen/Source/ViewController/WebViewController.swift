@@ -15,8 +15,6 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
     let ad = UIApplication.shared.delegate as! AppDelegate
     let realm = try! Realm()
     
-    var webV: WKWebView!
-    
     @IBOutlet weak var webView: WKWebView!
     
     override func viewDidLoad() {

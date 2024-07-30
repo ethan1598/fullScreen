@@ -16,6 +16,7 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
     let realm = try! Realm()
     
     @IBOutlet weak var webView: WKWebView!
+    var webV = WKWebView()
     
     override func viewDidLoad() {
 //        if #available(iOS 16.4, *) {
@@ -81,23 +82,27 @@ extension WebViewController: WKUIDelegate, WKNavigationDelegate {
                 webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",completionHandler: nil)
                 webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",completionHandler: nil)
                 webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",completionHandler: nil)
-            } else {
-                webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#id_mbv')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#hwjsutnkgpqrlvfmio')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#tuvqmrlgjopsfwxnikh')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#ptymjglvrfxsqhikwuno')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#hd_pop')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
             }
         }
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("END LOAD")
+        
+        let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
+        
+        if checkAdUrl.contains("site1") == false {
+            webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#id_mbv')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#hwjsutnkgpqrlvfmio')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#tuvqmrlgjopsfwxnikh')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#ptymjglvrfxsqhikwuno')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('#hd_pop')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
+        }
     }
     
 }

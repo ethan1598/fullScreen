@@ -164,13 +164,15 @@ extension WebViewController {
                 return
             }
             
-            print("now url = \(url)", url.count)
-            self.navigationItem.title = "\(url.removingPercentEncoding ?? "")"
+            var removePercentUrl = url.removingPercentEncoding ?? ""
+            
+            print("now url = \(removePercentUrl)", url.count)
+            self.navigationItem.title = "\(removePercentUrl)"
             
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             let changeUrl = extractDomainUrl(urlString: url)
             
-            if url.contains("site1") && url.contains("콘텐츠") && url.contains("인기") {
+            if removePercentUrl.contains("site1") && removePercentUrl.contains("콘텐츠") && removePercentUrl.contains("인기") {
                 if checkAdUrl != changeUrl {
                     let alert = UIAlertController(title: "Detect Change URL", message: "요청된 url = \(checkAdUrl)\n변경된 url = \(changeUrl)\n변경된 url로 저장하시겠습니까?", preferredStyle: .alert)
                     

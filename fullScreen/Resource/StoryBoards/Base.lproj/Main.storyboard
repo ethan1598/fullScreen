@@ -151,7 +151,6 @@
                         </navigationBarAppearance>
                         <navigationBarAppearance key="scrollEdgeAppearance">
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <color key="shadowColor" systemColor="systemBackgroundColor"/>
                         </navigationBarAppearance>
                     </navigationBar>
                     <nil name="viewControllers"/>

@@ -165,7 +165,7 @@ extension WebViewController {
             }
             
             print("now url = \(url)", url.count)
-            self.navigationItem.title = "\(url.removingPercentEncoding)"
+            self.navigationItem.title = "\(url.removingPercentEncoding ?? "")"
             
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             let changeUrl = extractDomainUrl(urlString: url)

@@ -111,6 +111,7 @@ extension WebViewController {
     
     func setupWebView() {
         let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsInlineMediaPlayback = false2
         webV = WKWebView(frame: .zero, configuration: webConfiguration)
         
         view.addSubview(webV)

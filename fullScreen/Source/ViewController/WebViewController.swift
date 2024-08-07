@@ -111,7 +111,7 @@ extension WebViewController {
     
     func setupWebView() {
         let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.allowsInlineMediaPlayback = false2
+        webConfiguration.allowsInlineMediaPlayback = false
         webV = WKWebView(frame: .zero, configuration: webConfiguration)
         
         view.addSubview(webV)
@@ -165,7 +165,7 @@ extension WebViewController {
             }
             
             print("now url = \(url)", url.count)
-            self.navigationItem.title = "\(url)"
+            self.navigationItem.title = "\(url.removingPercentEncoding)"
             
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             let changeUrl = extractDomainUrl(urlString: url)

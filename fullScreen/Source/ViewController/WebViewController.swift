@@ -169,7 +169,7 @@ extension WebViewController {
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             let changeUrl = extractDomainUrl(urlString: url)
             
-            if url.contains("site1") && url.contains("%EC%9B%B9%ED%88%B0?fil=%EC%9D%B8%EA%B8%B0") {
+            if url.contains("site1") && url.contains("콘텐츠") && url.contains("인기") {
                 if checkAdUrl != changeUrl {
                     let alert = UIAlertController(title: "Detect Change URL", message: "요청된 url = \(checkAdUrl)\n변경된 url = \(changeUrl)\n변경된 url로 저장하시겠습니까?", preferredStyle: .alert)
                     

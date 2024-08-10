@@ -147,7 +147,6 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <navigationBarAppearance key="standardAppearance">
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <color key="shadowColor" systemColor="systemBackgroundColor"/>
                         </navigationBarAppearance>
                         <navigationBarAppearance key="scrollEdgeAppearance">
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

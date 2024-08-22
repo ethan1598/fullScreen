@@ -60,6 +60,10 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
     override var prefersStatusBarHidden: Bool {
         return navigationController?.isNavigationBarHidden ?? false
     }
+    
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
 }
 
 extension WebViewController: WKUIDelegate, WKNavigationDelegate {

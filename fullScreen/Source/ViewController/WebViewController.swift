@@ -106,6 +106,7 @@ extension WebViewController: WKUIDelegate, WKNavigationDelegate {
             webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
             webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
             webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
+            webView.evaluateJavaScript("document.querySelectorAll('.at-go')[0].style.display = 'none'", completionHandler: nil)
         }
     }
     

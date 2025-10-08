@@ -67,49 +67,7 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
 }
 
 extension WebViewController: WKUIDelegate, WKNavigationDelegate {
-    //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-    //        print("didStartProvisionalNavigation")
-    //    }
-    
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        print("didCommit")
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.6) { [self] in
-            let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
-            
-            if checkAdUrl.contains("site1") {
-                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",completionHandler: nil)
-            }
-        }
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("END LOAD")
-        
-        let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
-        
-        if checkAdUrl.contains("site1") == false {
-            webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#id_mbv')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#hwjsutnkgpqrlvfmio')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#tuvqmrlgjopsfwxnikh')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#ptymjglvrfxsqhikwuno')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('#hd_pop')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
-            webView.evaluateJavaScript("document.querySelectorAll('.at-go')[0].style.display = 'none'", completionHandler: nil)
-        }
-    }
-    
+    // WKUserScript가 모든 광고를 즉시 제거하므로 추가 네비게이션 델리게이트 불필요
 }
 
 extension WebViewController {
@@ -117,6 +75,10 @@ extension WebViewController {
     func setupWebView() {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsInlineMediaPlayback = false
+        
+        // MARK: - 즉시 광고 제거 스크립트 (WKUserScript)
+        setupImmediateAdBlocking(webConfiguration: webConfiguration)
+        
         webV = WKWebView(frame: .zero, configuration: webConfiguration)
         
         view.addSubview(webV)
@@ -161,6 +123,98 @@ extension WebViewController {
             print("Invalid URL")
             return ""
         }
+    }
+    
+    
+    // MARK: - 즉시 광고 제거 시스템 (WKUserScript)
+    func setupImmediateAdBlocking(webConfiguration: WKWebViewConfiguration) {
+        let adBlockScript = """
+        (function() {
+            console.log('🚀 즉시 광고 차단 스크립트 시작');
+            
+            // 불법 도박 사이트 링크 제거 함수
+            function removeGamblingAds() {
+                // linkbn.php 패턴의 링크들 제거
+                const gamblingLinks = document.querySelectorAll('a[href*="linkbn.php"]');
+                if (gamblingLinks.length > 0) {
+                    console.log('🎰 불법 도박 링크 제거:', gamblingLinks.length + '개');
+                    gamblingLinks.forEach(link => {
+                        link.style.display = 'none';
+                        link.remove();
+                    });
+                }
+                
+                // 기존 광고 요소들 제거
+                const adSelectors = [
+                    '.navbar', '#mobile_nav', '.col-md-12.mobile-banner',
+                    '.clearfix', '.bn.bnt', '.visible-xs', '#banner_21_img',
+                    '#main-banner-view', '#id_mbv', '#hd_pop', '.basic-banner',
+                    '.m-list', '.at-go', '.col-md-12.mobile-banner'
+                ];
+                
+                let removedCount = 0;
+                adSelectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        el.style.display = 'none';
+                        el.remove();
+                        removedCount++;
+                    });
+                });
+                
+                if (removedCount > 0) {
+                    console.log('🧹 광고 요소 제거:', removedCount + '개');
+                }
+            }
+            
+            // DOM 변경 감지 및 실시간 광고 제거
+            const observer = new MutationObserver(function(mutations) {
+                let shouldCheck = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        shouldCheck = true;
+                    }
+                });
+                
+                if (shouldCheck) {
+                    removeGamblingAds();
+                }
+            });
+            
+            // DOM이 준비되면 즉시 실행
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', removeGamblingAds);
+            } else {
+                removeGamblingAds();
+            }
+            
+            // body가 준비되면 observer 시작
+            if (document.body) {
+                observer.observe(document.body, { 
+                    childList: true, 
+                    subtree: true 
+                });
+            } else {
+                document.addEventListener('DOMContentLoaded', function() {
+                    observer.observe(document.body, { 
+                        childList: true, 
+                        subtree: true 
+                    });
+                });
+            }
+            
+            console.log('✅ 즉시 광고 차단 시스템 활성화');
+        })();
+        """
+        
+        let userScript = WKUserScript(
+            source: adBlockScript,
+            injectionTime: .atDocumentStart, // 페이지 로드 시작 시점
+            forMainFrameOnly: false
+        )
+        
+        webConfiguration.userContentController.addUserScript(userScript)
+        print("🚀 즉시 광고 차단 스크립트 주입 완료")
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

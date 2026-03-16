@@ -86,6 +86,9 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Config with real URLs
+Config.plist
+
 ### SwiftPackageManager ###
 Packages
 xcuserdata

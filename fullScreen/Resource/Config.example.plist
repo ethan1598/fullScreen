@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Site1URL</key>
+	<string>https://example1.com/</string>
+	<key>Site1Key</key>
+	<string>site1</string>
+	<key>Site2URL</key>
+	<string>https://example2.com/</string>
+	<key>Site2Key</key>
+	<string>site2</string>
+</dict>
+</plist>

@@ -94,7 +94,7 @@
                                                     <constraint firstAttribute="height" constant="64" id="4wJ-tO-Qeb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="tinted" title="Site1" cornerStyle="large"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="Site 1" cornerStyle="large"/>
                                                 <connections>
                                                     <action selector="goSite1:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WqJ-NZ-uIV"/>
                                                 </connections>
@@ -105,7 +105,7 @@
                                                     <constraint firstAttribute="height" constant="64" id="Yv4-Ie-4ar"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="tinted" title="Site2" cornerStyle="large"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="Site 2" cornerStyle="large"/>
                                                 <connections>
                                                     <action selector="goSite2:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MB5-2d-aO1"/>
                                                 </connections>
@@ -130,7 +130,7 @@
                         <outlet property="goSite1" destination="wkE-xw-p9U" id="rOD-w1-Gi3"/>
                         <outlet property="recentSite2Link" destination="aWJ-oJ-WDK" id="4C0-J0-43X"/>
                         <outlet property="recentSite1Link" destination="6HP-60-VDv" id="YSP-GC-MmL"/>
-                        <outlet property="site1Title" destination="Hl6-YB-0zw" id="O21-B0-mu1"/>
+                        <outlet property="searchTitle" destination="Hl6-YB-0zw" id="O21-B0-mu1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -147,11 +147,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <navigationBarAppearance key="standardAppearance">
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <color key="shadowColor" systemColor="systemBackgroundColor"/>
                         </navigationBarAppearance>
                         <navigationBarAppearance key="scrollEdgeAppearance">
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <color key="shadowColor" systemColor="systemBackgroundColor"/>
                         </navigationBarAppearance>
                     </navigationBar>
                     <nil name="viewControllers"/>

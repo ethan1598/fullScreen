@@ -11,117 +11,85 @@ import WebKit
 import RealmSwift
 
 class WebViewController: UIViewController, UIScrollViewDelegate {
-    
+
     let ad = UIApplication.shared.delegate as! AppDelegate
     let realm = try! Realm()
-    
+
     @IBOutlet weak var webView: WKWebView!
-    var webV:WKWebView!
-    
-    override func viewDidLoad() {
-//        if #available(iOS 16.4, *) {
-//            webView.isInspectable = true
-//        }
-//        
-//        webView.scrollView.delegate = self
-//        webView.navigationDelegate  = self
-//        webView.uiDelegate = self
-//        
-//        webView.allowsBackForwardNavigationGestures = true
-//        
-//        self.webView.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
+    var webV = WKWebView()
+
+    // Config.plist에서 사이트 키워드 로드
+    private var siteKeywords: [(key: String, keyword: String)] {
+        guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
+              let dict = NSDictionary(contentsOfFile: path) else {
+            return []
+        }
+        var result: [(key: String, keyword: String)] = []
+        if let key = dict["Site1Key"] as? String {
+            result.append((key: "site1", keyword: key))
+        }
+        if let key = dict["Site2Key"] as? String {
+            result.append((key: "site2", keyword: key))
+        }
+        return result
     }
-    
+
+    override func viewDidLoad() {
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: {
             (records) -> Void in
             for record in records {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-                // remove callback
             }
         })
-        
+
         navigationController?.hidesBarsOnSwipe = true
-        
+
         self.navigationItem.title = "\(ad.goURL)"
-        
+
         let url = URL(string: ad.goURL)
         let req = URLRequest(url: url!)
-        
-//        webView.load(req)
-        
+
         setupWebView()
     }
-    
-//    override func viewDidDisappear(_ animated: Bool) {
-//        webView?.loadHTMLString("<html><body></body></html>", baseURL: nil)
-//    }
-    
+
     override var prefersStatusBarHidden: Bool {
         return navigationController?.isNavigationBarHidden ?? false
+    }
+
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
     }
 }
 
 extension WebViewController: WKUIDelegate, WKNavigationDelegate {
-    //    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-    //        print("didStartProvisionalNavigation")
-    //    }
-    
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        print("didCommit")
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.6) { [self] in
-            let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
-            
-            if checkAdUrl.contains("site1") {
-                webView.evaluateJavaScript("document.querySelectorAll('.navbar')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.col-md-12.mobile-banner')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.clearfix')[1].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.bn.bnt')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[0].setAttribute('style', 'display:none!important')",completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.visible-xs')[1].setAttribute('style', 'display:none!important')",completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#banner_21_img')[0].style.display = 'none'",completionHandler: nil)
-            } else {
-                webView.evaluateJavaScript("document.querySelectorAll('#main-banner-view')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#id_mbv')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#hwjsutnkgpqrlvfmio')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#tuvqmrlgjopsfwxnikh')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#ptymjglvrfxsqhikwuno')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#mobile_nav')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('#hd_pop')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[0].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.basic-banner.row.row-10')[1].style.display = 'none'", completionHandler: nil)
-                webView.evaluateJavaScript("document.querySelectorAll('.m-list')[0].style.display = 'none'", completionHandler: nil)
-            }
-        }
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("END LOAD")
-    }
-    
 }
 
 extension WebViewController {
-    
+
     func setupWebView() {
         let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsInlineMediaPlayback = false
+
+        // MARK: - 즉시 광고 제거 스크립트 (WKUserScript)
+        setupImmediateAdBlocking(webConfiguration: webConfiguration)
+
         webV = WKWebView(frame: .zero, configuration: webConfiguration)
-        
+
         view.addSubview(webV)
-        
+
         webV.scrollView.delegate = self
         webV.navigationDelegate  = self
         webV.uiDelegate = self
-        
+
         webV.allowsBackForwardNavigationGestures = true
-        
-        // URL 로드
+
         let url = URL(string: ad.goURL)!
         let request = URLRequest(url: url)
         webV.load(request)
-        
+
         webV.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             webV.topAnchor.constraint(equalTo: view.topAnchor),
@@ -130,18 +98,17 @@ extension WebViewController {
             webV.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         print("SET UP WEBVIEW")
-        
+
         if #available(iOS 16.4, *) {
             webV.isInspectable = true
         }
-        
+
         webV.addObserver(self, forKeyPath: "URL", options: .new, context: nil)
     }
-    
+
     func extractDomainUrl(urlString: String) -> String {
         if let url = URL(string: urlString) {
             if let domain = url.host {
-                // domain 변수에는 "www.example.com"이 저장됩니다.
                 return domain
             } else {
                 print("No domain found")
@@ -152,33 +119,107 @@ extension WebViewController {
             return ""
         }
     }
-    
+
+
+    // MARK: - 즉시 광고 제거 시스템 (WKUserScript)
+    func setupImmediateAdBlocking(webConfiguration: WKWebViewConfiguration) {
+        let adBlockScript = """
+        (function() {
+            function removeAds() {
+                const adLinks = document.querySelectorAll('a[href*="linkbn.php"]');
+                adLinks.forEach(link => {
+                    link.style.display = 'none';
+                    link.remove();
+                });
+
+                const adSelectors = [
+                    '.navbar', '#mobile_nav', '.col-md-12.mobile-banner',
+                    '.clearfix', '.bn.bnt', '.visible-xs', '#banner_21_img',
+                    '#main-banner-view', '#id_mbv', '#hd_pop', '.basic-banner',
+                    '.m-list', '.at-go', '.col-md-12.mobile-banner'
+                ];
+
+                adSelectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        el.style.display = 'none';
+                        el.remove();
+                    });
+                });
+            }
+
+            const observer = new MutationObserver(function(mutations) {
+                let shouldCheck = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        shouldCheck = true;
+                    }
+                });
+
+                if (shouldCheck) {
+                    removeAds();
+                }
+            });
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', removeAds);
+            } else {
+                removeAds();
+            }
+
+            if (document.body) {
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            } else {
+                document.addEventListener('DOMContentLoaded', function() {
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                });
+            }
+        })();
+        """
+
+        let userScript = WKUserScript(
+            source: adBlockScript,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: false
+        )
+
+        webConfiguration.userContentController.addUserScript(userScript)
+    }
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(WKWebView.url) {
             guard let url = self.webV.url?.absoluteString else {
                 return
             }
-            
-            print("now url = \(url)", url.count)
-            self.navigationItem.title = "\(url)"
-            
+
+            var removePercentUrl = url.removingPercentEncoding ?? ""
+
+            print("now url = \(removePercentUrl)", url.count)
+            self.navigationItem.title = "\(removePercentUrl)"
+
             let checkAdUrl = extractDomainUrl(urlString: ad.goURL)
             let changeUrl = extractDomainUrl(urlString: url)
-            
-            if url.contains("site1") && url.contains("%EC%9B%B9%ED%88%B0?fil=%EC%9D%B8%EA%B8%B0") {
-                if checkAdUrl != changeUrl {
+
+            // site1 URL 변경 감지
+            if checkAdUrl != changeUrl && ad.goURL.contains(extractDomainUrl(urlString: ad.goURL)) {
+                let matchedSite = detectSite(url: removePercentUrl)
+
+                if let site = matchedSite {
                     let alert = UIAlertController(title: "Detect Change URL", message: "요청된 url = \(checkAdUrl)\n변경된 url = \(changeUrl)\n변경된 url로 저장하시겠습니까?", preferredStyle: .alert)
-                    
+
                     let success = UIAlertAction(title: "확인", style: .default){ [self] action in
-                        print("확인 버튼이 눌렸습니다.")
-                        
-                        let existingData = self.realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site1'")
-                        print("취소할 데이터 :", existingData)
-                        
+                        let existingData = self.realm.objects(UrlInfoRealm.self).filter("urlSrl == %@", site)
+
                         let newData = UrlInfoRealm()
-                        newData.urlSrl = "site1"
-                        newData.urlDomain = url.removingPercentEncoding
-                        
+                        newData.urlSrl = site
+                        newData.urlDomain = site == "site1" ? url.removingPercentEncoding : url
+
                         do {
                             try realm.write {
                                 realm.delete(existingData)
@@ -188,58 +229,40 @@ extension WebViewController {
                             print("\(error)")
                         }
                     }
-                    
-                    let cancel = UIAlertAction(title: "취소", style: .cancel){ cancel in
-                        print("취소 버튼이 눌렸습니다.")
-                    }
-                    
+
+                    let cancel = UIAlertAction(title: "취소", style: .cancel)
+
                     alert.addAction(cancel)
                     alert.addAction(success)
-                    
+
                     present(alert, animated: true)
                 }
-                
-                // navigationController 기본 뒤로가기 컨트롤러
-                self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-            } else if url.contains("site2") && url.count <= 23 {
-                if checkAdUrl != changeUrl {
-                    let alert = UIAlertController(title: "Detect Change URL", message: "요청된 url = \(checkAdUrl)\n변경된 url = \(changeUrl)\n변경된 url로 저장하시겠습니까?", preferredStyle: .alert)
-                    
-                    let success = UIAlertAction(title: "확인", style: .default){ [self] action in
-                        print("확인 버튼이 눌렸습니다.")
-                        
-                        let existingData = self.realm.objects(UrlInfoRealm.self).filter("urlSrl == 'site2'")
-                        print("취소할 데이터 :", existingData)
-                        
-                        let newData = UrlInfoRealm()
-                        newData.urlSrl = "site2"
-                        newData.urlDomain = url
-                        
-                        do {
-                            try realm.write {
-                                realm.delete(existingData)
-                                realm.add(newData)
-                            }
-                        } catch {
-                            print("\(error)")
-                        }
-                    }
-                    
-                    let cancel = UIAlertAction(title: "취소", style: .cancel){ cancel in
-                        print("취소 버튼이 눌렸습니다.")
-                    }
-                    
-                    alert.addAction(cancel)
-                    alert.addAction(success)
-                    
-                    present(alert, animated: true)
-                }
-                
+
                 self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             } else {
                 self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
             }
-            
         }
+    }
+
+    private func detectSite(url: String) -> String? {
+        guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
+              let dict = NSDictionary(contentsOfFile: path) else {
+            return nil
+        }
+
+        if let site1URL = dict["Site1URL"] as? String,
+           let site1Domain = URL(string: site1URL)?.host,
+           url.contains(site1Domain.components(separatedBy: ".").first ?? "") {
+            return "site1"
+        }
+
+        if let site2URL = dict["Site2URL"] as? String,
+           let site2Domain = URL(string: site2URL)?.host,
+           url.contains(site2Domain.components(separatedBy: ".").first ?? "") {
+            return "site2"
+        }
+
+        return nil
     }
 }
